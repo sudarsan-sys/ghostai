@@ -5,15 +5,17 @@ change.
 
 ## Current Phase
 
-- Foundations Complete
+- Phase 1: Editor Shell Foundations
 
 ## Current Goal
 
-- Feature development
+- Implement base editor chrome (Navbar & Project Sidebar)
 
 ## Completed
 
 - Design System initialization and component installation (shadcn/ui, lucide-react, custom tokens)
+- [02] Editor Shell Components (Navbar & Project Sidebar)
+- Integration of Editor Shell into main application
 
 ## In Progress
 
@@ -21,17 +23,16 @@ change.
 
 ## Next Up
 
-- [First unit to build]
+- [03] Workflow Canvas (Chapter 3)
 
 ## Open Questions
 
-- [Any unresolved product or technical decisions]
+- None
 
 ## Architecture Decisions
 
-- [Decisions made that affect the system design or
-  data model — include why the decision was made]
+- **Floating Sidebar**: Decision to use a floating sidebar that doesn't push content to maintain a clean editor canvas focus.
 
 ## Session Notes
 
-- [Context needed to resume work in the next session]
+- [07/05/2026] Starting implementation of the base editor chrome components as per 02-editor.md.
