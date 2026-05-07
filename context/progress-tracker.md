@@ -5,17 +5,18 @@ change.
 
 ## Current Phase
 
-- Phase 1: Editor Shell Foundations
+- Phase 2: User Identity & Project Access
 
 ## Current Goal
 
-- Implement base editor chrome (Navbar & Project Sidebar)
+- Implement Authentication (Clerk) and route protection
 
 ## Completed
 
 - Design System initialization and component installation (shadcn/ui, lucide-react, custom tokens)
 - [02] Editor Shell Components (Navbar & Project Sidebar)
 - Integration of Editor Shell into main application
+- [03] Authentication & User Menu (Clerk) and route protection
 
 ## In Progress
 
