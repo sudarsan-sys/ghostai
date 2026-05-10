@@ -1,24 +1,27 @@
-# Current Issue: Prisma Client Connection Error (P6000)
+# Current Issue: Liveblocks Room Access Denied (Code 4001)
 
 ## Error Summary
-The application is failing to connect to the database in development mode with a `PrismaClientKnownRequestError` (code `P6000`).
+The collaborative canvas is failing to connect to the Liveblocks WebSocket server with a `4001` error: "You have no access to this room".
 
 ## Error Message
 ```text
-Using an HTTP connection string is not supported with Prisma Client version 7.8.0 by this version of `prisma dev`. Please either use a direct TCP connection string or upgrade your client to version 7.2.0.
+[browser] Liveblocks You have no access to this room
+[browser] Liveblocks Connection to websocket server closed. Reason: You have no access to this room (code: 4001).
 ```
 
 ## Analysis
-- **Root Cause**: The `.env` file is configured with a `DATABASE_URL` using the `prisma+postgres://` protocol (HTTP-based).
-- **Tooling Mismatch**: The local `prisma dev` proxy running the database does not support the HTTP protocol required by the current Prisma Client version (`7.8.0`) for this URL type.
-- **Implementation Detail**: `lib/prisma.ts` detects the `prisma+postgres://` prefix and attempts to instantiate the client using the `accelerateUrl` property, which activates the HTTP-based serverless engine.
+- **Root Cause**: The application is using **ID Tokens** (`liveblocks.identifyUser`) for authentication. By default, ID tokens require room permissions to be managed in the Liveblocks Dashboard. Since we are managing permissions in our own database (Prisma), the Liveblocks server rejects the connection because it doesn't see a matching permission rule in its own system.
+- **Secondary Issue**: Previous logs showed an `INVALID_SECRET_KEY` error, which suggests the `LIVEBLOCKS_SECRET_KEY` in `.env` might be incorrect or not properly loaded.
+- **Architecture Mismatch**: Our `liveblocks-auth` route verifies access using `getProjectWithAccess(room)`, but `identifyUser` doesn't pass this authorization state to the Liveblocks room.
 
 ## Action Plan
-1. **Explain to User**: Clarify that for local development with `prisma dev`, a direct TCP connection (`postgres://`) is required when using recent Prisma 7.x clients.
-2. **Update Environment**: Suggest updating the `.env` file to use the TCP URL provided by the `prisma dev` terminal output.
-3. **Update Client Factory**: Refactor `lib/prisma.ts` to be more resilient, potentially allowing the use of the driver adapter even when an HTTP-style URL is provided if a TCP fallback is known.
+1. **Switch to Access Tokens**: Refactor `app/api/liveblocks-auth/route.ts` to use `liveblocks.prepareSession`.
+2. **Explicit Authorization**: Use `session.allow(room, session.FULL_ACCESS)` inside the auth route after the database check passes.
+3. **Verify Secret Key**: Ensure the provided secret key is valid and matches the environment.
+4. **Restart Server**: Ensure the environment variables are fully reloaded.
 
 ## Status
 - [x] Identified and analyzed error
-- [ ] Implement fix (Code or Environment)
-- [ ] Verify connectivity
+- [x] Refactor to Access Token authentication
+- [x] Sanitize Secret Key
+- [/] Verify room access

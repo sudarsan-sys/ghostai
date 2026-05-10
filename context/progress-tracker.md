@@ -9,7 +9,7 @@ change.
 
 ## Current Goal
 
-- Implement Project Selection home screen and management dialogs
+- Implement Custom Canvas Nodes and Interactive Elements (Phase 4)
 
 ## Completed
 
@@ -21,14 +21,14 @@ change.
 - [05] Prisma Database Setup (Models, Client, Migrations)
 - [06] API Routes for Project Management (CRUD)
 - [07] Wire UI to Project APIs (Sidebar & Dialogs)
+- [08] Editor Workspace Shell (Access Checks & Layout)
+- [09] Share Dialog & Collaborator Management
+- [10] Liveblocks Realtime Infrastructure Setup
+- [11] Collaborative Canvas Foundation (React Flow & Liveblocks)
 
 ## In Progress
 
-- [08] Collaborative Canvas Setup (Liveblocks)
-
-## Open Questions
-
-- None
+- [/] [12] Custom Canvas Nodes & Elements
 
 ## Architecture Decisions
 

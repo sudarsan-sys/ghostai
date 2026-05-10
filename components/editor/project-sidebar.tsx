@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 interface Project {
   id: string;
@@ -23,6 +24,7 @@ interface ProjectSidebarProps {
   onClose: () => void;
   initialOwnedProjects: Project[];
   initialSharedProjects: Project[];
+  currentProjectId?: string;
 }
 
 import { useProjectStore } from "@/hooks/use-project-store";
@@ -31,7 +33,8 @@ export function ProjectSidebar({
   isOpen, 
   onClose, 
   initialOwnedProjects, 
-  initialSharedProjects 
+  initialSharedProjects,
+  currentProjectId
 }: ProjectSidebarProps) {
   const { openDialog } = useProjectDialogs();
   const { ownedProjects, sharedProjects, setProjects } = useProjectStore();
@@ -95,26 +98,47 @@ export function ProjectSidebar({
             
             <TabsContent value="my-projects" className="space-y-2 outline-none">
               {myProjects.length > 0 ? (
-                myProjects.map((project) => (
-                  <div 
-                    key={project.id}
-                    className="group flex items-center justify-between p-3 rounded-xl bg-base/40 border border-transparent hover:border-surface-border hover:bg-subtle/50 transition-all cursor-pointer"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="p-2 rounded-lg bg-surface border border-surface-border group-hover:border-brand/30 transition-colors">
-                        <FolderCode className="h-4 w-4 text-copy-secondary group-hover:text-brand transition-colors" />
-                      </div>
-                      <div className="flex flex-col min-w-0">
-                        <span className="text-sm font-medium text-copy-primary truncate">
-                          {project.name}
-                        </span>
-                        <span className="text-[10px] text-copy-faint truncate font-mono">
-                          {project.slug}
-                        </span>
-                      </div>
-                    </div>
-                    
-                    <DropdownMenu>
+                myProjects.map((project) => {
+                  const isCurrent = project.id === currentProjectId;
+                  return (
+                    <div 
+                      key={project.id}
+                      className="group flex items-center gap-2"
+                    >
+                      <Link 
+                        href={`/editor/${project.id}`}
+                        className={cn(
+                          "flex-1 flex items-center justify-between p-3 rounded-xl transition-all cursor-pointer min-w-0",
+                          isCurrent 
+                            ? "bg-brand/10 border border-brand/30 shadow-sm" 
+                            : "bg-base/40 border border-transparent hover:border-surface-border hover:bg-subtle/50"
+                        )}
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className={cn(
+                            "p-2 rounded-lg bg-surface border transition-colors",
+                            isCurrent ? "border-brand/40" : "border-surface-border group-hover:border-brand/30"
+                          )}>
+                            <FolderCode className={cn(
+                              "h-4 w-4 transition-colors",
+                              isCurrent ? "text-brand" : "text-copy-secondary group-hover:text-brand"
+                            )} />
+                          </div>
+                          <div className="flex flex-col min-w-0 text-left">
+                            <span className={cn(
+                              "text-sm font-medium truncate",
+                              isCurrent ? "text-brand" : "text-copy-primary"
+                            )}>
+                              {project.name}
+                            </span>
+                            <span className="text-[10px] text-copy-faint truncate font-mono">
+                              {project.slug}
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
+                      
+                      <DropdownMenu>
                       <DropdownMenuTrigger 
                         className={cn(
                           "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium transition-all outline-none select-none hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 opacity-0 group-hover:opacity-100 text-copy-muted hover:text-copy-primary"
@@ -146,8 +170,10 @@ export function ProjectSidebar({
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
-                  </div>
-                ))
+                    </div>
+                  );
+                })
+
               ) : (
                 <div className="flex flex-col items-center justify-center h-48 px-6 text-center text-copy-muted border border-dashed border-border-subtle rounded-2xl bg-base/50">
                   <p className="text-sm font-medium">No projects yet</p>
@@ -157,26 +183,44 @@ export function ProjectSidebar({
             
             <TabsContent value="shared" className="space-y-2 outline-none">
               {sharedProjects.length > 0 ? (
-                sharedProjects.map((project) => (
-                  <div 
-                    key={project.id}
-                    className="group flex items-center justify-between p-3 rounded-xl bg-base/40 border border-transparent hover:border-surface-border transition-all cursor-pointer"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-surface border border-surface-border">
-                        <FolderCode className="h-4 w-4 text-copy-faint" />
+                sharedProjects.map((project) => {
+                  const isCurrent = project.id === currentProjectId;
+                  return (
+                    <Link 
+                      key={project.id}
+                      href={`/editor/${project.id}`}
+                      className={cn(
+                        "group flex items-center justify-between p-3 rounded-xl transition-all cursor-pointer",
+                        isCurrent 
+                          ? "bg-brand/10 border-brand/30 shadow-sm" 
+                          : "bg-base/40 border border-transparent hover:border-surface-border hover:bg-subtle/50"
+                      )}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={cn(
+                          "p-2 rounded-lg bg-surface border transition-colors",
+                          isCurrent ? "border-brand/40" : "border-surface-border group-hover:border-brand/30"
+                        )}>
+                          <FolderCode className={cn(
+                            "h-4 w-4 transition-colors",
+                            isCurrent ? "text-brand" : "text-copy-secondary group-hover:text-brand"
+                          )} />
+                        </div>
+                        <div className="flex flex-col text-left">
+                          <span className={cn(
+                            "text-sm font-medium",
+                            isCurrent ? "text-brand" : "text-copy-primary"
+                          )}>
+                            {project.name}
+                          </span>
+                          <span className="text-[10px] text-copy-faint italic">
+                            Collaborator
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-medium text-copy-primary">
-                          {project.name}
-                        </span>
-                        <span className="text-[10px] text-copy-faint italic">
-                          Collaborator
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))
+                    </Link>
+                  );
+                })
               ) : (
                 <div className="flex flex-col items-center justify-center h-48 px-6 text-center text-copy-muted border border-dashed border-border-subtle rounded-2xl bg-base/50">
                   <p className="text-sm font-medium">Nothing shared with you</p>
