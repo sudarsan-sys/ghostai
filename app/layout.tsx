@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/ui/themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { DialogProvider } from "@/components/providers/dialog-provider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -27,6 +28,8 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider
+      signInForceRedirectUrl="/editor"
+      signUpForceRedirectUrl="/editor"
       appearance={{
         theme: dark,
         variables: {
@@ -59,7 +62,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
       >
         <body className="min-h-full flex flex-col bg-base text-copy-primary">
-          <TooltipProvider>{children}</TooltipProvider>
+          <TooltipProvider>
+            <DialogProvider>
+              {children}
+            </DialogProvider>
+          </TooltipProvider>
         </body>
       </html>
     </ClerkProvider>
