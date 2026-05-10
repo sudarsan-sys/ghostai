@@ -15,8 +15,11 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 
+import { useProjectActions } from "@/hooks/use-project-actions";
+
 export function CreateProjectDialog() {
-  const { isOpen, type, closeDialog, isLoading, setLoading } = useProjectDialogs();
+  const { isOpen, type, closeDialog } = useProjectDialogs();
+  const { createProject, isLoading } = useProjectActions();
   const [name, setName] = useState("");
 
   const isCreate = type === "create";
@@ -37,14 +40,8 @@ export function CreateProjectDialog() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !slug) return;
-
-    setLoading(true);
-    // Mock API delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log("Creating project:", { name, slug });
-    setLoading(false);
-    closeDialog();
+    if (!name.trim()) return;
+    await createProject(name);
   };
 
   return (
@@ -78,7 +75,7 @@ export function CreateProjectDialog() {
             
             <div className="grid gap-2">
               <Label htmlFor="slug" className="text-sm font-medium text-copy-secondary">
-                Project Slug
+                Room ID Preview
               </Label>
               <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-base border border-surface-border text-copy-faint text-sm">
                 <span className="shrink-0 opacity-50">ghostai.io/</span>

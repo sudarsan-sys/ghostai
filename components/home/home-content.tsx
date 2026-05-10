@@ -9,7 +9,12 @@ import { Show } from "@clerk/nextjs";
 import { useProjectDialogs } from "@/hooks/use-project-dialogs";
 import Link from "next/link";
 
-export function HomeContent() {
+interface HomeContentProps {
+  ownedProjects: any[];
+  sharedProjects: any[];
+}
+
+export function HomeContent({ ownedProjects, sharedProjects }: HomeContentProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { openDialog } = useProjectDialogs();
 
@@ -25,6 +30,8 @@ export function HomeContent() {
           <ProjectSidebar 
             isOpen={isSidebarOpen} 
             onClose={() => setIsSidebarOpen(false)} 
+            initialOwnedProjects={ownedProjects}
+            initialSharedProjects={sharedProjects}
           />
           
           <main className="pt-14 h-[calc(100vh-3.5rem)] flex flex-col items-center justify-center relative overflow-hidden">

@@ -17,10 +17,14 @@ change.
 - [02] Editor Shell Components (Navbar & Project Sidebar)
 - Integration of Editor Shell into main application
 - [03] Authentication & User Menu (Clerk) and route protection
+- [04] Project Selection Home & Dialogs (Create, Rename, Delete)
+- [05] Prisma Database Setup (Models, Client, Migrations)
+- [06] API Routes for Project Management (CRUD)
+- [07] Wire UI to Project APIs (Sidebar & Dialogs)
 
 ## In Progress
 
-- [04] Project Selection Home & Dialogs (Create, Rename, Delete)
+- [08] Collaborative Canvas Setup (Liveblocks)
 
 ## Open Questions
 
