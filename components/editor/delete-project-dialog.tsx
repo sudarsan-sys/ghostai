@@ -12,19 +12,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Loader2, AlertTriangle } from "lucide-react";
 
+import { useProjectActions } from "@/hooks/use-project-actions";
+
 export function DeleteProjectDialog() {
-  const { isOpen, type, selectedProject, closeDialog, isLoading, setLoading } = useProjectDialogs();
+  const { isOpen, type, selectedProject, closeDialog } = useProjectDialogs();
+  const { deleteProject, isLoading } = useProjectActions();
 
   const isDelete = type === "delete";
 
   const handleDelete = async () => {
-    if (!selectedProject) return;
-
-    setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log("Deleting project:", { id: selectedProject.id, name: selectedProject.name });
-    setLoading(false);
-    closeDialog();
+    await deleteProject();
   };
 
   return (

@@ -21,8 +21,10 @@ interface Project {
   slug: string;
 }
 
+import { useProjectActions } from "@/hooks/use-project-actions";
+
 export function RenameProjectDialog() {
-  const { isOpen, type, selectedProject, closeDialog, isLoading, setLoading } = useProjectDialogs();
+  const { isOpen, type, selectedProject, closeDialog } = useProjectDialogs();
 
   const isRename = type === "rename";
 
@@ -33,14 +35,11 @@ export function RenameProjectDialog() {
   return (
     <Dialog open={isOpen && isRename} onOpenChange={onOpenChange}>
       <DialogContent 
-        key={selectedProject?.id} 
         className="sm:max-w-[425px] bg-surface border-surface-border"
       >
         <RenameDialogInner 
           selectedProject={selectedProject} 
           closeDialog={closeDialog} 
-          isLoading={isLoading} 
-          setLoading={setLoading} 
         />
       </DialogContent>
     </Dialog>
@@ -50,25 +49,20 @@ export function RenameProjectDialog() {
 interface RenameDialogInnerProps {
   selectedProject: Project | null;
   closeDialog: () => void;
-  isLoading: boolean;
-  setLoading: (loading: boolean) => void;
 }
 
-function RenameDialogInner({ selectedProject, closeDialog, isLoading, setLoading }: RenameDialogInnerProps) {
+function RenameDialogInner({ selectedProject, closeDialog }: RenameDialogInnerProps) {
   const [name, setName] = useState(selectedProject?.name ?? "");
+  const { renameProject, isLoading } = useProjectActions();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !selectedProject || name === selectedProject.name) {
+    if (!name.trim() || !selectedProject || name === selectedProject.name) {
       if (name === selectedProject?.name) closeDialog();
       return;
     }
 
-    setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    console.log("Renaming project:", { id: selectedProject.id, oldName: selectedProject.name, newName: name });
-    setLoading(false);
-    closeDialog();
+    await renameProject(name);
   };
 
   return (

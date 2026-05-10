@@ -10,29 +10,37 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import { useEffect, useState } from "react";
+
 interface Project {
   id: string;
   name: string;
   slug: string;
-  role: "owner" | "collaborator";
 }
-
-const mockProjects: Project[] = [
-  { id: "1", name: "Billing System", slug: "billing-system", role: "owner" },
-  { id: "2", name: "Auth Service", slug: "auth-service", role: "owner" },
-  { id: "3", name: "Data Pipeline", slug: "data-pipeline", role: "collaborator" },
-];
 
 interface ProjectSidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  initialOwnedProjects: Project[];
+  initialSharedProjects: Project[];
 }
 
-export function ProjectSidebar({ isOpen, onClose }: ProjectSidebarProps) {
-  const { openDialog } = useProjectDialogs();
+import { useProjectStore } from "@/hooks/use-project-store";
 
-  const myProjects = mockProjects.filter((p) => p.role === "owner");
-  const sharedProjects = mockProjects.filter((p) => p.role === "collaborator");
+export function ProjectSidebar({ 
+  isOpen, 
+  onClose, 
+  initialOwnedProjects, 
+  initialSharedProjects 
+}: ProjectSidebarProps) {
+  const { openDialog } = useProjectDialogs();
+  const { ownedProjects, sharedProjects, setProjects } = useProjectStore();
+
+  useEffect(() => {
+    setProjects(initialOwnedProjects, initialSharedProjects);
+  }, [initialOwnedProjects, initialSharedProjects, setProjects]);
+
+  const myProjects = ownedProjects;
 
   return (
     <>
@@ -163,7 +171,7 @@ export function ProjectSidebar({ isOpen, onClose }: ProjectSidebarProps) {
                           {project.name}
                         </span>
                         <span className="text-[10px] text-copy-faint italic">
-                          Shared by {project.role}
+                          Collaborator
                         </span>
                       </div>
                     </div>
