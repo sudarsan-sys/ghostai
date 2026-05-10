@@ -9,7 +9,7 @@ change.
 
 ## Current Goal
 
-- Implement Authentication (Clerk) and route protection
+- Implement Project Selection home screen and management dialogs
 
 ## Completed
 
@@ -20,11 +20,7 @@ change.
 
 ## In Progress
 
-- None
-
-## Next Up
-
-- [03] Workflow Canvas (Chapter 3)
+- [04] Project Selection Home & Dialogs (Create, Rename, Delete)
 
 ## Open Questions
 
